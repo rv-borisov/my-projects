@@ -136,3 +136,5 @@ C:\Users\romka\Source\Repos\my-projects\CalculatorApp\obj\Debug\netcoreapp3.1\Ca
 C:\Users\romka\Source\Repos\my-projects\CalculatorApp\obj\Debug\netcoreapp3.1\CalculatorApp.dll
 C:\Users\romka\Source\Repos\my-projects\CalculatorApp\obj\Debug\netcoreapp3.1\CalculatorApp.pdb
 C:\Users\romka\source\repos\my-projects\CalculatorApp\obj\Debug\netcoreapp3.1\CalculatorApp.csprojAssemblyReference.cache
+C:\Users\romka\source\repos\my-projects\CalculatorApp\obj\Debug\netcoreapp3.1\CalculatorApp.csproj.CoreCompileInputs.cache
+C:\Users\romka\source\repos\my-projects\CalculatorApp\obj\Debug\netcoreapp3.1\CalculatorApp.genruntimeconfig.cache

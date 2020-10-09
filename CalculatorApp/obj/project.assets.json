@@ -8079,11 +8079,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\romka\\Source\\Repos\\my-projects\\CalculatorApp\\CalculatorApp.csproj",
+      "projectUniqueName": "C:\\Users\\romka\\source\\repos\\my-projects\\CalculatorApp\\CalculatorApp.csproj",
       "projectName": "CalculatorApp",
-      "projectPath": "C:\\Users\\romka\\Source\\Repos\\my-projects\\CalculatorApp\\CalculatorApp.csproj",
+      "projectPath": "C:\\Users\\romka\\source\\repos\\my-projects\\CalculatorApp\\CalculatorApp.csproj",
       "packagesPath": "C:\\Users\\romka\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\romka\\Source\\Repos\\my-projects\\CalculatorApp\\obj\\",
+      "outputPath": "C:\\Users\\romka\\source\\repos\\my-projects\\CalculatorApp\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -8140,7 +8140,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
       }
     }
   }
