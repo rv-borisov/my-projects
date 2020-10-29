@@ -19,7 +19,7 @@ namespace CalculatorApp.Controllers
         {
             return View(db.CalcOperations.ToList());
         }
-        /*[HttpGet]
+        [HttpGet]
         public IActionResult Calculate(float op1, float op2, OperationEnum operation)
         {
             ViewBag.Result = OperationResult(op1, op2, operation);
@@ -37,12 +37,7 @@ namespace CalculatorApp.Controllers
                     Result = 5
                 }
                 );
-        }*/
-
-        //[HttpGet]
-        //public IActionResult
-        //[HttpPost]
-
+        }
         float OperationResult(float op1, float op2, OperationEnum operation)
         {
             return operation switch
