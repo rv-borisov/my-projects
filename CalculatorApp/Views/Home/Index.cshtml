@@ -20,44 +20,49 @@
         <h3>Калькулятор</h3>
         <table>
             <tr>
-                <td colspan="5"><input id="display" type="text" name="display" style="width: 386px; height: 50px"></td>
+                <td colspan="5"><input id="display" type="text" name="display" style="width: 386px; height: 50px; margin-bottom: -3px"></td>
+            </tr>
+            <tr>
+                <td colspan="5"><input id="input" type="text" name="input" @*onkeydown="return checkKey(event.key)"*@ style="width: 386px; height: 50px"></td>
             </tr>
             <tr>
                 <td><input type="button" value="x^(1/n)"></td>
                 <td><input type="button" value="x^(n)"></td>
                 <td><input type="button" value="Pi"></td>
                 <td><input type="button" value="e"></td>
-                <td><input type="button" value="/" onclick="calc.display.value +='/'"></td>
+                <td><input type="button" value="/" onclick="calc.input.value +='/'"></td>
             </tr>
             <tr>
                 <td><input type="button" value="sin"></td>
-                <td><input type="button" value="7" onclick="calc.display.value +='7'"></td>
-                <td><input type="button" value="8" onclick="calc.display.value +='8'"></td>
-                <td><input type="button" value="9" onclick="calc.display.value +='9'"></td>
-                <td><input type="button" value="*" onclick="calc.display.value +='*'"></td>
+                <td><input type="button" value="7" onclick="calc.input.value +='7'"></td>
+                <td><input type="button" value="8" onclick="calc.input.value +='8'"></td>
+                <td><input type="button" value="9" onclick="calc.input.value +='9'"></td>
+                <td><input type="button" value="*" onclick="calc.input.value +='*'"></td>
             </tr>
             <tr>
                 <td><input type="button" value="cos"></td>
-                <td><input type="button" value="4" onclick="calc.display.value +='4'"></td>
-                <td><input type="button" value="5" onclick="calc.display.value +='5'"></td>
-                <td><input type="button" value="6" onclick="calc.display.value +='6'"></td>
-                <td><input type="button" value="-" onclick="calc.display.value +='-'"></td>
+                <td><input type="button" value="4" onclick="calc.input.value +='4'"></td>
+                <td><input type="button" value="5" onclick="calc.input.value +='5'"></td>
+                <td><input type="button" value="6" onclick="calc.input.value +='6'"></td>
+                <td><input type="button" value="-" onclick="calc.input.value +='-'"></td>
             </tr>
             <tr>
                 <td><input type="button" value="tg"></td>
-                <td><input type="button" value="1" onclick="calc.display.value +='1'"></td>
-                <td><input type="button" value="2" onclick="calc.display.value +='2'"></td>
-                <td><input type="button" value="3" onclick="calc.display.value +='3'"></td>
-                <td><input type="button" value="+" onclick="calc.display.value +='+'"></td>
+                <td><input type="button" value="1" onclick="calc.input.value +='1'"></td>
+                <td><input type="button" value="2" onclick="calc.input.value +='2'"></td>
+                <td><input type="button" value="3" onclick="calc.input.value +='3'"></td>
+                <td><input type="button" value="+" onclick="calc.input.value +='+'"></td>
             </tr>
             <tr>
                 <td><input type="button" value="ctg"></td>
-                <td colspan="2"><input type="button" value="0" style="width: 155px; height: 50px"></td>
+                <td colspan="2"><input type="button" value="0" onclick="calc.input.value +='0'" style="width: 153px; height: 50px"></td>
                 <td><input type="button" value="."></td>
-                <td><input id="btCalc" type="button" value="="></td>
+                <td><input type="button" value="=" onclick="Send()"></td>
             </tr>
             <tr>
-                <td colspan="5"><input id="btTranslate" type="button" value="Перевод из одной СС в другую" style="width: 386px; height: 50px"></td>
+                <td colspan="3"><input id="btTranslate" type="button" value="Перевод из одной СС в другую" style="width: 230px; height: 50px"></td>
+                <td><input type="button" value="С" onclick="calc.input.value = ''"></td>
+                <td><input type="button" value="<-" onclick="DeleteLast()"></td>
             </tr>
         </table>
         <table>
@@ -89,16 +94,41 @@
 </body>
 </html>
 <script type="text/javascript">
-    let btCalc = document.getElementById("btCalc");
-    btCalc.addEventListener("click", function () {
+
+    let input = document.getElementById("input");
+
+    document.addEventListener('keypress', function (e) {
+        if (input != document.activeElement && ((e.key >= '0' && e.key <= '9') || e.key == '+' || e.key == '-' ||
+            e.key == '*' || e.key == '/' || e.key == '(' || e.key == ')' || e.key == '.' || e.key == ',')) {
+            input.value += e.key;
+        }
+        else if (e.code == 'Enter') {
+            e.preventDefault();
+            Send();
+        }
+    });
+    document.addEventListener('keydown', function (e) {
+        if (input != document.activeElement && e.code == 'Backspace') {
+            DeleteLast();
+        }
+    });
+
+    function Send() {
         let display = document.getElementById("display");
         $.get({
             url: '/Home/Calculate/',
-            data: { input: display.value },
+            data: { input: input.value },
             dataType: 'text',
             success: function (data) {
                 display.value = data;
             }
         })
-    })
+    }
+    function DeleteLast (){
+        input.value = input.value.substring(0, input.value.length - 1);
+    }
+    //function checkKey(key) {
+    //    return (key >= '0' && key <= '9') || key == '+' || key == '-' || key == '*' || key == '/' || key == '(' || key == ')' ||
+    //        key == '.' || key == ',' || key == 'ArrowLeft' || key == 'ArrowRight' || key == 'Delete' || key == 'Backspace' || key == 'Enter';
+    //}
 </script>

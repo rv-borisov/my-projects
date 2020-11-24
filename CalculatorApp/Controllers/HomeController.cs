@@ -23,56 +23,96 @@ namespace CalculatorApp.Controllers
         [HttpGet]
         public IActionResult Calculate(string input)
         {
-            float result = Calc(input);
+            double result = Calc(input);
             return Content(result.ToString());
         }
 
 
-        public float Calc(string input)
+        public double Calc(string input)
         {
-            if (input[0] == '-')
+            Stack<double> number = new Stack<double>();
+            Stack<Symbol> sign = new Stack<Symbol>();
+            double op1, op2;
+            if (input == null || input[0] == '-')
             {
                 input = "0" + input;
             }
-            Stack<float> number = new Stack<float>();
-            Stack<Operation> sign = new Stack<Operation>();
-            float op1, op2;
+            input = input.Replace('.', ',');
             input += "|";
-            string buffNumber = "";
+            string buffer = "";
             for (int i = 0; i < input.Length; i++)
             {
                 if (char.IsNumber(input[i]) || input[i] == ',')
                 {
                     if (char.IsNumber(input[i + 1]) || input[i + 1] == ',')
                     {
-                        buffNumber += input[i];
+                        buffer += input[i];
                     }
                     else
                     {
-                        buffNumber += input[i];
-                        number.Push(Convert.ToSingle(buffNumber));
-                        buffNumber = "";
+                        buffer += input[i];
+                        number.Push(Convert.ToDouble(buffer));
+                        buffer = "";
+                    }
+                }
+                else if (char.IsLetter(input[i]))
+                {
+                    if (char.IsLetter(input[i + 1]))
+                    {
+                        buffer += input[i];
+                    }
+                    else
+                    {
+                        buffer += input[i];
+                        if (new OperationDictionary().dictionary.ContainsKey(buffer))
+                        {
+                            sign.Push(new Symbol(buffer));
+                            buffer = "";
+                        }
                     }
                 }
                 else
                 {
-                    if (!sign.Any() || new Operation(input[i]).GetPriority() > sign.Peek().GetPriority())
+                    if(input[i] == '(')
                     {
-                        sign.Push(new Operation(input[i]));
+                        sign.Push(new Symbol(input[i].ToString()));
+                    }
+                    else if (input[i] == ')')
+                    {
+                        while(sign.Peek().GetOperationType() != "(")
+                        {
+                            op2 = number.Pop();
+                            op1 = number.Pop();
+                            number.Push(sign.Pop().GetResult(op1, op2));
+                        }
+                        sign.Pop();
+                    }
+                    else if (!sign.Any() || new Symbol(input[i].ToString()).GetPriority() > sign.Peek().GetPriority())
+                    {
+                        sign.Push(new Symbol(input[i].ToString()));
                     }
                     else
                     {
-                        while (new Operation(input[i]).GetPriority() <= sign.Peek().GetPriority())
+                        
+                        while (new Symbol(input[i].ToString()).GetPriority() <= sign.Peek().GetPriority())
                         {
-                            op2 = number.Pop();
-                            op1 = number.Pop(); 
-                            number.Push(sign.Pop().GetResult(op1, op2));
+                            if (sign.Peek().GetPriority() == 4)
+                            {
+                                op1 = number.Pop();
+                                number.Push(sign.Pop().GetResult(op1));
+                            }
+                            else
+                            {
+                                op2 = number.Pop();
+                                op1 = number.Pop();
+                                number.Push(sign.Pop().GetResult(op1, op2));
+                            }                         
                             if (sign.Count == 0)
                             {
                                 break;
                             }
                         }
-                        sign.Push(new Operation(input[i]));
+                        sign.Push(new Symbol(input[i].ToString()));
                     }
                 }
             }
