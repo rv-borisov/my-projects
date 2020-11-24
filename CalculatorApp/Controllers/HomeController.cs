@@ -19,35 +19,64 @@ namespace CalculatorApp.Controllers
         {
             return View(db.CalcOperations.ToList());
         }
+
         [HttpGet]
-        public IActionResult Calculate(float op1, float op2, OperationEnum operation)
+        public IActionResult Calculate(string input)
         {
-            ViewBag.Result = OperationResult(op1, op2, operation);
-            return View();
+            float result = Calc(input);
+            return Content(result.ToString());
         }
-        [HttpPost]
-        public void Calculate(float op1, float op2, OperationEnum operation, float result)
+
+
+        public float Calc(string input)
         {
-            db.CalcOperations.AddRange(
-                new CalcOperations
-                {
-                    Operand1 = op1,
-                    Operand2 = op2,
-                    Operation = OperationEnum.Add,
-                    Result = 5
-                }
-                );
-        }
-        float OperationResult(float op1, float op2, OperationEnum operation)
-        {
-            return operation switch
+            if (input[0] == '-')
             {
-                OperationEnum.Add => op1 + op2,
-                OperationEnum.Subtract => op1 - op2,
-                OperationEnum.Multiply => op1 / op2,
-                OperationEnum.Divide => op1 * op2,
-                _ => 0,
-            };
+                input = "0" + input;
+            }
+            Stack<float> number = new Stack<float>();
+            Stack<Operation> sign = new Stack<Operation>();
+            float op1, op2;
+            input += "|";
+            string buffNumber = "";
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (char.IsNumber(input[i]) || input[i] == ',')
+                {
+                    if (char.IsNumber(input[i + 1]) || input[i + 1] == ',')
+                    {
+                        buffNumber += input[i];
+                    }
+                    else
+                    {
+                        buffNumber += input[i];
+                        number.Push(Convert.ToSingle(buffNumber));
+                        buffNumber = "";
+                    }
+                }
+                else
+                {
+                    if (!sign.Any() || new Operation(input[i]).GetPriority() > sign.Peek().GetPriority())
+                    {
+                        sign.Push(new Operation(input[i]));
+                    }
+                    else
+                    {
+                        while (new Operation(input[i]).GetPriority() <= sign.Peek().GetPriority())
+                        {
+                            op2 = number.Pop();
+                            op1 = number.Pop(); 
+                            number.Push(sign.Pop().GetResult(op1, op2));
+                            if (sign.Count == 0)
+                            {
+                                break;
+                            }
+                        }
+                        sign.Push(new Operation(input[i]));
+                    }
+                }
+            }
+            return number.Pop();      
         }
     }
 }

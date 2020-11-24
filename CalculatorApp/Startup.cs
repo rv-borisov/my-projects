@@ -26,8 +26,9 @@ namespace CalculatorApp
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<OperationContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<OperationContext>(options => options.UseNpgsql(connection));
             services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

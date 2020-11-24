@@ -16,73 +16,89 @@
     </style>
 </head>
 <body>
-    <h3>Калькулятор</h3>
-    <table>
-        <tr>
-            <td colspan="5"><input type="text" name="display" style="width: 386px; height: 50px"></td>
-        </tr>
-        <tr>
-            <td><input type="button" value="x^(1/n)"></td>
-            <td><input type="button" value="x^(n)"></td>
-            <td><input type="button" value="Pi"></td>
-            <td><input type="button" value="e"></td>
-            <td><input type="button" value="/"></td>
-        </tr>
-        <tr>
-            <td><input type="button" value="sin"></td>
-            <td><input type="button" value="7"></td>
-            <td><input type="button" value="8"></td>
-            <td><input type="button" value="9"></td>
-            <td><input type="button" value="*"></td>
-        </tr>
-        <tr>
-            <td><input type="button" value="cos"></td>
-            <td><input type="button" value="4"></td>
-            <td><input type="button" value="5"></td>
-            <td><input type="button" value="6"></td>
-            <td><input type="button" value="-"></td>
-        </tr>
-        <tr>
-            <td><input type="button" value="tg"></td>
-            <td><input type="button" value="1"></td>
-            <td><input type="button" value="2"></td>
-            <td><input type="button" value="3"></td>
-            <td><input type="button" value="+"></td>
-        </tr>
-        <tr>
-            <td><input type="button" value="ctg"></td>
-            <td colspan="2"><input type="button" value="0" style="width: 155px; height: 50px"></td>
-            <td><input type="button" value="."></td>
-            <td><input type="button" value="=" onclick=""></td>
-        </tr>
-        <tr>
-            <td colspan="5"><input type="button" value="Перевод из одной СС в другую" style="width: 386px; height: 50px"></td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <td>История вычислений</td>
-        </tr>
-        @foreach (var CalcOperations in Model)
-        { 
-        <tr>
-            @switch (CalcOperations.Operation)
+    <form name="calc">
+        <h3>Калькулятор</h3>
+        <table>
+            <tr>
+                <td colspan="5"><input id="display" type="text" name="display" style="width: 386px; height: 50px"></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="x^(1/n)"></td>
+                <td><input type="button" value="x^(n)"></td>
+                <td><input type="button" value="Pi"></td>
+                <td><input type="button" value="e"></td>
+                <td><input type="button" value="/" onclick="calc.display.value +='/'"></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="sin"></td>
+                <td><input type="button" value="7" onclick="calc.display.value +='7'"></td>
+                <td><input type="button" value="8" onclick="calc.display.value +='8'"></td>
+                <td><input type="button" value="9" onclick="calc.display.value +='9'"></td>
+                <td><input type="button" value="*" onclick="calc.display.value +='*'"></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="cos"></td>
+                <td><input type="button" value="4" onclick="calc.display.value +='4'"></td>
+                <td><input type="button" value="5" onclick="calc.display.value +='5'"></td>
+                <td><input type="button" value="6" onclick="calc.display.value +='6'"></td>
+                <td><input type="button" value="-" onclick="calc.display.value +='-'"></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="tg"></td>
+                <td><input type="button" value="1" onclick="calc.display.value +='1'"></td>
+                <td><input type="button" value="2" onclick="calc.display.value +='2'"></td>
+                <td><input type="button" value="3" onclick="calc.display.value +='3'"></td>
+                <td><input type="button" value="+" onclick="calc.display.value +='+'"></td>
+            </tr>
+            <tr>
+                <td><input type="button" value="ctg"></td>
+                <td colspan="2"><input type="button" value="0" style="width: 155px; height: 50px"></td>
+                <td><input type="button" value="."></td>
+                <td><input id="btCalc" type="button" value="="></td>
+            </tr>
+            <tr>
+                <td colspan="5"><input id="btTranslate" type="button" value="Перевод из одной СС в другую" style="width: 386px; height: 50px"></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>История вычислений</td>
+            </tr>
+            @foreach (var CalcOperations in Model)
             {
-                case OperationEnum.Add:
-                    <td>@CalcOperations.Operand1 + @CalcOperations.Operand2 = @CalcOperations.Result</td>
-                    break;
-                case OperationEnum.Subtract:
-                    <td>@CalcOperations.Operand1 - @CalcOperations.Operand2 = @CalcOperations.Result</td>
-                    break;
-                case OperationEnum.Multiply:
-                    <td>@CalcOperations.Operand1 * @CalcOperations.Operand2 = @CalcOperations.Result</td>
-                    break;
-                case OperationEnum.Divide:
-                    <td>@CalcOperations.Operand1 / @CalcOperations.Operand2 = @CalcOperations.Result</td>
-                    break;
+                <tr>
+                    @switch (CalcOperations.Operation)
+                    {
+                        case OperationEnum.Add:
+                            <td>@CalcOperations.Operand1 + @CalcOperations.Operand2 = @CalcOperations.Result</td>
+                            break;
+                        case OperationEnum.Subtract:
+                            <td>@CalcOperations.Operand1 - @CalcOperations.Operand2 = @CalcOperations.Result</td>
+                            break;
+                        case OperationEnum.Multiply:
+                            <td>@CalcOperations.Operand1 * @CalcOperations.Operand2 = @CalcOperations.Result</td>
+                            break;
+                        case OperationEnum.Divide:
+                            <td>@CalcOperations.Operand1 / @CalcOperations.Operand2 = @CalcOperations.Result</td>
+                            break;
+                    }
+                </tr>
             }
-        </tr>
-        }
-    </table>
+        </table>
+    </form>
 </body>
 </html>
+<script type="text/javascript">
+    let btCalc = document.getElementById("btCalc");
+    btCalc.addEventListener("click", function () {
+        let display = document.getElementById("display");
+        $.get({
+            url: '/Home/Calculate/',
+            data: { input: display.value },
+            dataType: 'text',
+            success: function (data) {
+                display.value = data;
+            }
+        })
+    })
+</script>
