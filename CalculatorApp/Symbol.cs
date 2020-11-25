@@ -7,7 +7,7 @@ namespace CalculatorApp
 {
     public class Symbol
     {
-        readonly Dictionary<string, int> dictionary = new OperationDictionary().dictionary;
+        readonly Dictionary<string, int> dictionary = OperationDictionary.dictionary;
         string OperationType { get; set; }
         int Priority { get; set; }
         public string GetOperationType()
@@ -18,7 +18,7 @@ namespace CalculatorApp
         {
             return Priority;
         }
-        public double GetResult(double op1, double op2)
+        public decimal GetResult(decimal op1, decimal op2)
         {
             return OperationType switch
             {
@@ -26,15 +26,20 @@ namespace CalculatorApp
                 "-" => op1 - op2,
                 "*" => op1 * op2,
                 "/" => op1 / op2,
-                "^" => Math.Pow(op1, op2),
+                "^" => (decimal)Math.Pow((double)op1, (double)op2),
                 _ => 0
             };
         }
-        public double GetResult(double op)
+        public decimal GetResult(decimal op)
         {
+            double gradus = (double)op;
+            double radian = (gradus / 180) * Math.PI;
             return OperationType switch
             {
-                "sin" => Math.Sin(op),
+                "sin" => (decimal)Math.Sin(radian),
+                "cos" => (decimal)Math.Cos(radian),
+                "tg" => (decimal)Math.Tan(radian),
+                "ctg" => (decimal)(1 /Math.Tan(radian)),
                 _ => 0
             };
         }

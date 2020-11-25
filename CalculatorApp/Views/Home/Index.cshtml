@@ -20,47 +20,47 @@
         <h3>Калькулятор</h3>
         <table>
             <tr>
-                <td colspan="5"><input id="display" type="text" name="display" style="width: 386px; height: 50px; margin-bottom: -3px"></td>
+                <td colspan="5"><input id="display" type="text" name="display" placeholder="Результат" style="width: 386px; height: 50px; margin-bottom: -3px"></td>
             </tr>
             <tr>
-                <td colspan="5"><input id="input" type="text" name="input" @*onkeydown="return checkKey(event.key)"*@ style="width: 386px; height: 50px"></td>
+                <td colspan="5"><input id="input" type="text" name="input" placeholder="Пример: 4/2+3*sin(30)+4*((-2)^3+4/3" @*onkeydown="return checkKey(event.key)"*@ style="width: 386px; height: 50px"></td>
             </tr>
             <tr>
-                <td><input type="button" value="x^(1/n)"></td>
-                <td><input type="button" value="x^(n)"></td>
-                <td><input type="button" value="Pi"></td>
-                <td><input type="button" value="e"></td>
-                <td><input type="button" value="/" onclick="calc.input.value +='/'"></td>
+                <td><input type="button" class="btPowFunc" value="x^(1/n)" onclick="ButtonPowClick(this)"></td>
+                <td><input type="button" class="btPowFunc" value="x^(n)" onclick="ButtonPowClick(this)"></td>
+                <td><input type="button" class="btNumber" value="Pi" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="e" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="/" onclick="ButtonNumberClick(this)"></td>
             </tr>
             <tr>
-                <td><input type="button" value="sin"></td>
-                <td><input type="button" value="7" onclick="calc.input.value +='7'"></td>
-                <td><input type="button" value="8" onclick="calc.input.value +='8'"></td>
-                <td><input type="button" value="9" onclick="calc.input.value +='9'"></td>
-                <td><input type="button" value="*" onclick="calc.input.value +='*'"></td>
+                <td><input type="button" class="btFunc" value="sin" onclick="ButtonFunctionClick(this)"></td>
+                <td><input type="button" class="btNumber" value="7" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="8" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="9" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="*" onclick="ButtonNumberClick(this)"></td>
             </tr>
             <tr>
-                <td><input type="button" value="cos"></td>
-                <td><input type="button" value="4" onclick="calc.input.value +='4'"></td>
-                <td><input type="button" value="5" onclick="calc.input.value +='5'"></td>
-                <td><input type="button" value="6" onclick="calc.input.value +='6'"></td>
-                <td><input type="button" value="-" onclick="calc.input.value +='-'"></td>
+                <td><input type="button" class="btFunc" value="cos" onclick="ButtonFunctionClick(this)"></td>
+                <td><input type="button" class="btNumber" value="4" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="5" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="6" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="-" onclick="ButtonNumberClick(this)"></td>
             </tr>
             <tr>
-                <td><input type="button" value="tg"></td>
-                <td><input type="button" value="1" onclick="calc.input.value +='1'"></td>
-                <td><input type="button" value="2" onclick="calc.input.value +='2'"></td>
-                <td><input type="button" value="3" onclick="calc.input.value +='3'"></td>
-                <td><input type="button" value="+" onclick="calc.input.value +='+'"></td>
+                <td><input type="button" class="btFunc" value="tg" onclick="ButtonFunctionClick(this)"></td>
+                <td><input type="button" class="btNumber" value="1" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="2" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="3" onclick="ButtonNumberClick(this)"></td>
+                <td><input type="button" class="btNumber" value="+" onclick="ButtonNumberClick(this)"></td>
             </tr>
             <tr>
-                <td><input type="button" value="ctg"></td>
+                <td><input type="button" class="btFunc" value="ctg" onclick="ButtonFunctionClick(this)"></td>
                 <td colspan="2"><input type="button" value="0" onclick="calc.input.value +='0'" style="width: 153px; height: 50px"></td>
-                <td><input type="button" value="."></td>
+                <td><input type="button" value="." onclick="calc.input.value +='.'"></td>
                 <td><input type="button" value="=" onclick="Send()"></td>
             </tr>
             <tr>
-                <td colspan="3"><input id="btTranslate" type="button" value="Перевод из одной СС в другую" style="width: 230px; height: 50px"></td>
+                <td colspan="3"><input id="btTranslate" type="button" value="Перевод из одной СС в другую" disabled style="width: 230px; height: 50px"></td>
                 <td><input type="button" value="С" onclick="calc.input.value = ''"></td>
                 <td><input type="button" value="<-" onclick="DeleteLast()"></td>
             </tr>
@@ -93,42 +93,60 @@
     </form>
 </body>
 </html>
+
+
 <script type="text/javascript">
-
     let input = document.getElementById("input");
-
     document.addEventListener('keypress', function (e) {
-        if (input != document.activeElement && ((e.key >= '0' && e.key <= '9') || e.key == '+' || e.key == '-' ||
-            e.key == '*' || e.key == '/' || e.key == '(' || e.key == ')' || e.key == '.' || e.key == ',')) {
-            input.value += e.key;
-        }
-        else if (e.code == 'Enter') {
+        if (e.code == 'Enter') {
             e.preventDefault();
             Send();
         }
     });
-    document.addEventListener('keydown', function (e) {
-        if (input != document.activeElement && e.code == 'Backspace') {
-            DeleteLast();
-        }
-    });
+
+    function ButtonNumberClick(e) {
+        input.value += e.value;
+        input.focus();
+    }
+    function ButtonFunctionClick(e) {
+        input.value += e.value + "(";
+        input.focus();
+    }
+    function ButtonPowClick(e) {
+        var b = e.value.slice(0, -2);
+        input.value += b;
+        input.focus();
+    }
 
     function Send() {
         let display = document.getElementById("display");
         $.get({
             url: '/Home/Calculate/',
             data: { input: input.value },
-            dataType: 'text',
+            dataType: 'json',
             success: function (data) {
-                display.value = data;
+                display.value = data.result;
+                input.value = data.edited;
             }
         })
     }
     function DeleteLast (){
         input.value = input.value.substring(0, input.value.length - 1);
     }
+
     //function checkKey(key) {
     //    return (key >= '0' && key <= '9') || key == '+' || key == '-' || key == '*' || key == '/' || key == '(' || key == ')' ||
     //        key == '.' || key == ',' || key == 'ArrowLeft' || key == 'ArrowRight' || key == 'Delete' || key == 'Backspace' || key == 'Enter';
     //}
+
+    /*document.addEventListener('keydown', function (e) {
+        if (input != document.activeElement && e.code == 'Backspace') {
+            DeleteLast();
+        }
+    });*/
+    /*if (input != document.activeElement && ((e.key >= '0' && e.key <= '9') || e.key == '+' || e.key == '-' ||
+            e.key == '*' || e.key == '/' || e.key == '(' || e.key == ')' || e.key == '.' || e.key == ',')) {
+            input.value += e.key;
+        }
+        else*/
 </script>

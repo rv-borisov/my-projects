@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace CalculatorApp
 {
-    public class OperationDictionary
+    public static class OperationDictionary
     {
-        public readonly Dictionary<string, int> dictionary = new Dictionary<string, int>()
+        public static readonly Dictionary<string, int> dictionary = new Dictionary<string, int>()
         {
             {"|", 0},
             {"+", 1},
