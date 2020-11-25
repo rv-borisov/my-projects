@@ -10,36 +10,13 @@ namespace CalculatorApp
     {
         public static void Initialize(OperationContext context)
         { 
-            if (!context.CalcOperations.Any())
+            if (!context.Operations.Any())
             {
-                context.CalcOperations.AddRange(
-                    new CalcOperations
+                context.Operations.AddRange(
+                    new Operation
                     {
-                        Operand1 = 2,
-                        Operand2 = 3,
-                        Operation = OperationEnum.Add,
-                        Result = 5
-                    },
-                    new CalcOperations
-                    {
-                        Operand1 = 2,
-                        Operand2 = 3,
-                        Operation = OperationEnum.Subtract,
-                        Result = -1
-                    },
-                    new CalcOperations
-                    {
-                        Operand1 = 2,
-                        Operand2 = 3,
-                        Operation = OperationEnum.Multiply,
-                        Result = 6
-                    },
-                    new CalcOperations
-                    {
-                        Operand1 = 2,
-                        Operand2 = 3,
-                        Operation = OperationEnum.Divide,
-                        Result = 1.5f
+                        Expression = "1+2",
+                        Result = 3
                     }
                 );
                 context.SaveChanges();

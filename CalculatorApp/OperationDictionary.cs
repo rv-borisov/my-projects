@@ -7,7 +7,7 @@ namespace CalculatorApp
 {
     public static class OperationDictionary
     {
-        public static readonly Dictionary<string, int> dictionary = new Dictionary<string, int>()
+        public static readonly Dictionary<string, int> operationDictionary = new Dictionary<string, int>()
         {
             {"|", 0},
             {"+", 1},
@@ -20,7 +20,12 @@ namespace CalculatorApp
             {"sin", 4},
             {"cos", 4},
             {"tg", 4},
-            {"ctg", 4},
+            {"ctg", 4}
+        };
+        public static readonly Dictionary<string, double> constDictionary = new Dictionary<string, double>()
+        {
+            {"Pi", Math.PI},
+            {"e", Math.E}
         };
     }
 }

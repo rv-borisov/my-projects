@@ -7,7 +7,7 @@ namespace CalculatorApp
 {
     public class Symbol
     {
-        readonly Dictionary<string, int> dictionary = OperationDictionary.dictionary;
+        readonly Dictionary<string, int> dictionary = OperationDictionary.operationDictionary;
         string OperationType { get; set; }
         int Priority { get; set; }
         public string GetOperationType()

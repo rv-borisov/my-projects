@@ -18,7 +18,9 @@ namespace CalculatorApp.Controllers
         }
         public IActionResult Index()
         {
-            return View(db.CalcOperations.ToList());
+            List<Operation> operations = db.Operations.ToList();
+            operations.Reverse();
+            return View(operations);
         }
 
         [HttpGet]
@@ -27,6 +29,15 @@ namespace CalculatorApp.Controllers
             decimal result = Calc(input, out string edited);
             edited = edited.Replace("|", "");
             edited = edited.Replace(",", ".");
+
+            Operation operation = new Operation()
+            {
+                Expression = edited,
+                Result = result
+            };
+            db.Operations.Add(operation);
+            db.SaveChanges();
+
             var post = new
             {
                 result,
@@ -36,6 +47,17 @@ namespace CalculatorApp.Controllers
         }
 
 
+        /*[HttpPost]
+        public void Calculate(string input, string result)
+        {
+            Operation operation = new Operation()
+            {
+                Expression = input,
+                Result = Convert.ToDecimal(result)
+            };
+            db.Operations.Add(operation);
+            db.SaveChanges();
+        }*/
         public decimal Calc(string input, out string edited)
         {
             Stack<decimal> number = new Stack<decimal>();
@@ -68,11 +90,15 @@ namespace CalculatorApp.Controllers
                     else
                     {
                         buffer += input[i];
-                        if (OperationDictionary.dictionary.ContainsKey(buffer))
+                        if (OperationDictionary.operationDictionary.ContainsKey(buffer))
                         {
                             sign.Push(new Symbol(buffer));
-                            buffer = "";
                         }
+                        else if (OperationDictionary.constDictionary.ContainsKey(buffer))
+                        {
+                            number.Push((decimal)OperationDictionary.constDictionary[buffer]);
+                        }
+                        buffer = "";
                     }
                 }
                 else
@@ -88,6 +114,10 @@ namespace CalculatorApp.Controllers
                             if (sign.Peek().GetPriority() == 4)
                             {
                                 op1 = number.Pop();
+                                if (op1 == (decimal)Math.PI)
+                                {
+                                    op1 = 180;
+                                }
                                 number.Push(sign.Pop().GetResult(op1));
                             }
                             else
@@ -111,6 +141,10 @@ namespace CalculatorApp.Controllers
                             if (sign.Peek().GetPriority() == 4)
                             {
                                 op1 = number.Pop();
+                                if (op1 == (decimal)Math.PI)
+                                {
+                                    op1 = 180;
+                                }
                                 number.Push(sign.Pop().GetResult(op1));
                             }
                             else
@@ -140,12 +174,17 @@ namespace CalculatorApp.Controllers
             int j = 0;
 
             if (input == null || input[0] == '-' || input[0] == '+' || input[0] == '*' || input[0] == '/' 
-                || input[0] == '(' || input[0] == ')' || input[0] == '.' || input[0] == ',')
+                || input[0] == '.' || input[0] == ',')
             {
                 input = "0" + input;
             }
+            /*else if (input[0] == '(' || input[0] == ')')
+            {
+                input = "0+" + input;
+            }*/
             input = input.Replace('.', ',');
             input = input.Replace(" ", "");
+            input = input.Replace("p", "P");
 
             char[] ch = input.ToArray();
             while(ch[^1] == '-' || ch[^1] == '+' || ch[^1] == '*' || ch[^1] == '/')
@@ -153,7 +192,7 @@ namespace CalculatorApp.Controllers
                 Array.Resize(ref ch, ch.Length - 1);
             }
             input = new string(ch);
-
+            input += "|";
             for (int i = 0; i < input.Length; i++)
             {
                 if (j > 0 && j == i)
@@ -170,7 +209,7 @@ namespace CalculatorApp.Controllers
                     else
                     {
                         buffer += input[i];
-                        if (OperationDictionary.dictionary.ContainsKey(buffer))
+                        if (OperationDictionary.operationDictionary.ContainsKey(buffer))
                         {
                             result += buffer;
                             if (input[i + 1] != '(')
@@ -183,6 +222,10 @@ namespace CalculatorApp.Controllers
                                 }
                                 j += i;
                             }
+                        }
+                        else if (OperationDictionary.constDictionary.ContainsKey(buffer))
+                        {
+                            result += buffer;
                         }
                         buffer = "";
                         continue;
@@ -203,7 +246,7 @@ namespace CalculatorApp.Controllers
                             continue;
                         }         
                     }
-                    if (input[i] == '(' && (input[i + 1] == '+' || input[i + 1] == '-'))
+                    if (i + 1 < input.Length && input[i] == '(' && (input[i + 1] == '+' || input[i + 1] == '-'))
                     {
                         result += input[i] + "0";
                         continue;
@@ -234,6 +277,7 @@ namespace CalculatorApp.Controllers
                     result += ")";
                 }
             }
+            result = result.Replace("|","");
             result += "|";
             return result;
         }

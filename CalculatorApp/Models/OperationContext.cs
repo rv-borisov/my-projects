@@ -8,7 +8,7 @@ namespace CalculatorApp.Models
 {
     public class OperationContext : DbContext
     {
-        public DbSet<CalcOperations> CalcOperations { get; set; }
+        public DbSet<Operation> Operations { get; set; }
         public OperationContext(DbContextOptions<OperationContext> options)
             : base (options)
         {

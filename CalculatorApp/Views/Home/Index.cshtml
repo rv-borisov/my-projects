@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CalculatorApp.Models.CalcOperations>
+﻿@model IEnumerable<CalculatorApp.Models.Operation>
 @{
     ViewData["Title"] = "Калькулятор";
 }
@@ -23,7 +23,7 @@
                 <td colspan="5"><input id="display" type="text" name="display" placeholder="Результат" style="width: 386px; height: 50px; margin-bottom: -3px"></td>
             </tr>
             <tr>
-                <td colspan="5"><input id="input" type="text" name="input" placeholder="Пример: 4/2+3*sin(30)+4*((-2)^3+4/3" @*onkeydown="return checkKey(event.key)"*@ style="width: 386px; height: 50px"></td>
+                <td colspan="5"><input id="input" type="text" name="input" placeholder="Пример: 4/2+3*sin(30)+4*((-2)^3+3/4)" @*onkeydown="return checkKey(event.key)"*@ style="width: 386px; height: 50px"></td>
             </tr>
             <tr>
                 <td><input type="button" class="btPowFunc" value="x^(1/n)" onclick="ButtonPowClick(this)"></td>
@@ -65,28 +65,14 @@
                 <td><input type="button" value="<-" onclick="DeleteLast()"></td>
             </tr>
         </table>
-        <table>
+        <table id="historyTable">
             <tr>
-                <td>История вычислений</td>
+                <td>История вычислений:</td>
             </tr>
-            @foreach (var CalcOperations in Model)
+            @foreach (var Operations in Model)
             {
                 <tr>
-                    @switch (CalcOperations.Operation)
-                    {
-                        case OperationEnum.Add:
-                            <td>@CalcOperations.Operand1 + @CalcOperations.Operand2 = @CalcOperations.Result</td>
-                            break;
-                        case OperationEnum.Subtract:
-                            <td>@CalcOperations.Operand1 - @CalcOperations.Operand2 = @CalcOperations.Result</td>
-                            break;
-                        case OperationEnum.Multiply:
-                            <td>@CalcOperations.Operand1 * @CalcOperations.Operand2 = @CalcOperations.Result</td>
-                            break;
-                        case OperationEnum.Divide:
-                            <td>@CalcOperations.Operand1 / @CalcOperations.Operand2 = @CalcOperations.Result</td>
-                            break;
-                    }
+                    <td>@Operations.Expression=@Operations.Result</td>
                 </tr>
             }
         </table>
@@ -114,6 +100,7 @@
     }
     function ButtonPowClick(e) {
         var b = e.value.slice(0, -2);
+        b = b.slice(1);
         input.value += b;
         input.focus();
     }
@@ -127,8 +114,15 @@
             success: function (data) {
                 display.value = data.result;
                 input.value = data.edited;
+                $('history').load;
             }
         })
+        /*$.post({
+            url: 'Home/Calculate',
+            data: { input: input.value, result: display.value },
+            success: function () {
+            }
+        })*/
     }
     function DeleteLast (){
         input.value = input.value.substring(0, input.value.length - 1);
