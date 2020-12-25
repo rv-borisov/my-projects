@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<html>
+<body>
+    <div id="app" class="text-center">
+        <input id="input" type="text" v-on:input="setMessage" />
+        <input type="button" v-on:click="testRequest" />
+        <p>{{message}}</p>
+    </div>
+</body>
+</html>
+
+<script>
+
+    var vue = Vue.createApp({
+        data() {
+            return {
+                message: 'Hello Vue!',
+            }
+        },
+        methods: {
+            setMessage(event) {
+                this.message = event.target.value;
+            },
+            testRequest() {
+                var input = document.getElementById("input");
+                axios({
+                    method: 'post',
+                    url: '/Home/Test',
+                    params: {
+                        i: input.value
+                    }
+                })
+                    .then(response => (this.message = response.data))
+                    .catch(error => console.log(error));
+            }
+        }
+    }).mount('#app');
+</script>
